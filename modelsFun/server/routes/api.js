@@ -15,9 +15,5 @@ var apiRouter = function (apiController){
 
     return router;
 };
-/* GET home page. */
-//router.get('/', function(req, res, next) {
-//  res.render('index', { title: 'Express' });
-//});
 
 module.exports = apiRouter;
