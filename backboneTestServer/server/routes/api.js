@@ -1,10 +1,11 @@
 var express = require('express');
 
-var apiRouter = function (apiController){
+var apiRouter = function (apiController) {
     var router = express.Router();
 
     router.route('/vehicles')
-        .post(apiController.addVehicle);
+        .post(apiController.addVehicle)
+        .get(apiController.getAllVehicles);
 
 
     router.route('/vehicles/:id')

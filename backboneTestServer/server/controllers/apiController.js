@@ -16,6 +16,25 @@ var apiController = function(Vehicle){
         });
     };
 
+    var getAllVehicles = function(req, res){
+        console.log('bd -> ', req.body);
+        console.log('params -> ', req.params);
+        console.log('query -> ', req.query);
+        console.log('url -> ', req.url);
+
+        var page = (function(page){
+            return (page && !isNaN(page)) ? page : 1;
+        })(Number(req.query.page))
+
+        return Vehicle.find().skip((page-1)*2).limit(2).exec(function(err, result){
+            if(err){
+                console.log('errr, ',err);
+                return res.status(500).json({error: err});
+            }
+            return res.status(200).json(result);
+        });
+    };
+
     var updateVehicle = function(req, res){
         console.log('bd -> ', req.body);
         console.log('params -> ', req.params);
@@ -94,6 +113,7 @@ var apiController = function(Vehicle){
 
     return {
         getVehicle: getVehicle,
+        getAllVehicles: getAllVehicles,
         updateVehicle: updateVehicle,
         addVehicle: addVehicle,
         deleteVehicle: deleteVehicle

@@ -47,6 +47,15 @@ var Vehicle = Backbone.Model.extend({
     }
 });
 
+var Vehicles = Backbone.Collection.extend({
+    model: Vehicle,
+    url: 'api/vehicles/',
+});
+
+//ARGUMENTY DO GETA PRZEKAZUJEMY TAK
+//vss = new Vehicles()
+//vss.fetch({data: {page: 2}})
+
 window.Vehicle = Vehicle;
 
 
