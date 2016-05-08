@@ -53,8 +53,59 @@ document.getElementById("third-content").innerHTML = view3.$el;
 var Movie = Backbone.Model.extend();
 var MovieView = Backbone.View.extend({
     tagName: 'div',
+    events: {
+        //selector odnosi sie tylko do elementow wewnatrz
+        'click .sub-item': 'onClickSubItem',
+        click: "onClick"
+    },
+    initialize: function(){
+      console.log('init ', arguments[0]);
+
+        if(!this.model.length) {
+            //3 argument(this) sprawia ze call bedzie wykonywany na tym (this) w czasie wykonania
+            this.model.on('change', this.render, this);
+        } else {
+            this.model.on('add', this.elementAdded, this);
+            this.model.on('remove', this.elementRemoved, this);
+        }
+
+        if(arguments[0] && arguments[0]['even']){
+            // this.el.className += " even"
+            this.$el.addClass('even');
+        }
+       // Array.prototype.slice.call(arguments).forEach(function(elem, lp){
+       //     console.log(lp," -> ", elem, ' = ', arguments[elem]);
+       // })
+    },
+    elementAdded: function(elem){
+        console.log('eszlo', elem);
+        var movie = new MoviesView({model: elem, even: (this.model.length%2)});
+        console.log('newww >', movie);
+        this.$el.append(movie.render().$el);
+    },
+    elementRemoved: function(elem){
+        //GENERALNIE 100x LEPIEJ BYło BY DODAC COS PO CZYM MOZNA IDENTYFIKOWAC
+        //ELEMENTY ALE TU POGLADOWO
+        console.log('removed ', elem);
+
+        //this.$() to skrot od this.$el.find()
+        // this.$el.find('li').each(function(lp){
+        this.$('li').each(function(lp){
+            if(this.innerHTML.includes(elem.get('title'))){
+                $(this).remove();
+            }
+        })
+    },
+    onClick: function(){
+        console.log(this.model.get('title').toUpperCase());
+    },
+    onClickSubItem: function(e){
+        e.stopPropagation();
+        console.log(this.model.get('title').toLowerCase());
+    },
     single: function(movie){
-        this.$el.html(this.model.get('title'));
+        this.$el.html(this.model.get('title') + ' <span>'+this.model.get('runningTime')+'</span>');
+        // this.$el.html(this.model.get('title')+'<p class="sub-item">test</p>');
     },
     render: function () {
         this.single();
@@ -66,14 +117,23 @@ var Movies = Backbone.Collection.extend({
 });
 //ROZSZERZA MOVIE I DZIEDZICZY SINGLE
 var MoviesView = MovieView.extend({
+    events: function(){
+        return (this.model && this.model.length)
+            ? {}
+            : {
+            'click .sub-item': 'onClickSubItem',
+            click: "onClick"
+        };
+    },
     tagName: function(){
         return (this.model && this.model.length) ? "ul" : "li";
     },
     many: function(){
         //mozna tez uzyc metody each
-        this.model.forEach(function (elem) {
+        this.model.forEach(function (elem, lp) {
             var movie = new MoviesView({
-                model: elem
+                model: elem,
+                even: !(lp%2)
             });
             // console.log('movie > ',movie);
             this.$el.append(movie.render().$el);
@@ -93,7 +153,7 @@ var MoviesView = MovieView.extend({
     }
 });
 
-var movie1 = new Movie({title: "Szczeki"});
+var movie1 = new Movie({title: "Szczeki", runningTime: 113});
 var movieView1 = new MovieView({model: movie1});
 
 
@@ -101,9 +161,9 @@ $('#movie-content').html(movieView1.render().$el);
 
 var movies = new Movies([
     movie1,
-    new Movie({title: "Szarknado"}),
-        new Movie({title: "Sharktopus"}),
-        new Movie({title: "Mechashark"})
+    new Movie({title: "Szarknado", runningTime: 121}),
+        new Movie({title: "Sharktopus", runningTime: 87}),
+        new Movie({title: "Mechashark", runningTime: 93})
 ]);
 
 var moviesList = new MoviesView({
@@ -111,5 +171,8 @@ var moviesList = new MoviesView({
 });
 
 $('#movies-list-content').html(moviesList.render().$el);
+
+//ZMIANY
+// movies.at(3).set('runningTime', 244)
 
 
