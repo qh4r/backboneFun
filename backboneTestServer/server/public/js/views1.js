@@ -58,10 +58,10 @@ var MovieView = Backbone.View.extend({
         'click .sub-item': 'onClickSubItem',
         click: "onClick"
     },
-    initialize: function(){
-      console.log('init ', arguments[0]);
+    initialize: function () {
+        console.log('init ', arguments[0]);
 
-        if(!this.model.length) {
+        if (!this.model.length) {
             //3 argument(this) sprawia ze call bedzie wykonywany na tym (this) w czasie wykonania
             this.model.on('change', this.render, this);
         } else {
@@ -69,42 +69,87 @@ var MovieView = Backbone.View.extend({
             this.model.on('remove', this.elementRemoved, this);
         }
 
-        if(arguments[0] && arguments[0]['even']){
+        if (arguments[0] && arguments[0]['even']) {
             // this.el.className += " even"
             this.$el.addClass('even');
         }
-       // Array.prototype.slice.call(arguments).forEach(function(elem, lp){
-       //     console.log(lp," -> ", elem, ' = ', arguments[elem]);
-       // })
+        // Array.prototype.slice.call(arguments).forEach(function(elem, lp){
+        //     console.log(lp," -> ", elem, ' = ', arguments[elem]);
+        // })
     },
-    elementAdded: function(elem){
-        console.log('eszlo', elem);
-        var movie = new MoviesView({model: elem, even: (this.model.length%2)});
-        console.log('newww >', movie);
+    getTemplate: (function (t) {
+        var result = {};
+        return function getTemplate() {
+            if (result.template) {
+                console.log('CACHED');
+                var promise = new Promise(function(resolve, reject){
+                    setTimeout(function(){
+                        if(result.error){
+                            return reject(result);
+                        }
+                        return resolve(result);
+                    }, 0);
+                });
+                return promise;
+            } else {
+                console.log('REQUEST', result);
+
+                return fetch('/templates/movieTemplate.html')
+                    .then(function (response) {
+                        if (response && response.text) {
+                            return response.text();
+                        }
+                    }).then(function (parsedResponse) {
+                        result = {
+                            template: parsedResponse
+                        };
+                        return result;
+                    }).catch(function (err) {
+                        console.log(err);
+                        result = {
+                            template: '',
+                            error: err
+                        };
+                        return result;
+                    });
+            }
+        }
+    })(),
+    elementAdded: function (elem) {
+
+        var movie = new MoviesView({model: elem, even: (this.model.length % 2)});
         this.$el.append(movie.render().$el);
     },
-    elementRemoved: function(elem){
+    elementRemoved: function (elem) {
         //GENERALNIE 100x LEPIEJ BYło BY DODAC COS PO CZYM MOZNA IDENTYFIKOWAC
         //ELEMENTY ALE TU POGLADOWO
         console.log('removed ', elem);
 
         //this.$() to skrot od this.$el.find()
         // this.$el.find('li').each(function(lp){
-        this.$('li').each(function(lp){
-            if(this.innerHTML.includes(elem.get('title'))){
+        this.$('li').each(function (lp) {
+            if (this.innerHTML.includes(elem.get('title'))) {
                 $(this).remove();
             }
         })
     },
-    onClick: function(){
+    onClick: function () {
         console.log(this.model.get('title').toUpperCase());
     },
-    onClickSubItem: function(e){
+    onClickSubItem: function (e) {
         e.stopPropagation();
         console.log(this.model.get('title').toLowerCase());
     },
-    single: function(movie){
-        this.$el.html(this.model.get('title') + ' <span>'+this.model.get('runningTime')+'</span>');
+    single: function (movie) {
+
+        this.getTemplate().then(function(res){
+            var template = _.template(res.template);
+            var html = template(this.model.toJSON());
+            this.$el.html(html);
+        }.bind(this));
+
+        //PRZY POMOCY JQUERY
+        // this.$el.html(this.model.get('title') + ' <span>' + this.model.get('runningTime') + '</span>');
         // this.$el.html(this.model.get('title')+'<p class="sub-item">test</p>');
     },
     render: function () {
@@ -117,7 +162,7 @@ var Movies = Backbone.Collection.extend({
 });
 //ROZSZERZA MOVIE I DZIEDZICZY SINGLE
 var MoviesView = MovieView.extend({
-    events: function(){
+    events: function () {
         return (this.model && this.model.length)
             ? {}
             : {
@@ -125,27 +170,27 @@ var MoviesView = MovieView.extend({
             click: "onClick"
         };
     },
-    tagName: function(){
+    tagName: function () {
         return (this.model && this.model.length) ? "ul" : "li";
     },
-    many: function(){
+    many: function () {
         //mozna tez uzyc metody each
         this.model.forEach(function (elem, lp) {
             var movie = new MoviesView({
                 model: elem,
-                even: !(lp%2)
+                even: !(lp % 2)
             });
             // console.log('movie > ',movie);
             this.$el.append(movie.render().$el);
         }.bind(this));
     },
     render: function () {
-        if(!this.model){
+        if (!this.model) {
             return this;
         }
-        if(this.model.length){
+        if (this.model.length) {
             this.many();
-        }else {
+        } else {
             this.single();
         }
 
@@ -162,8 +207,8 @@ $('#movie-content').html(movieView1.render().$el);
 var movies = new Movies([
     movie1,
     new Movie({title: "Szarknado", runningTime: 121}),
-        new Movie({title: "Sharktopus", runningTime: 87}),
-        new Movie({title: "Mechashark", runningTime: 93})
+    new Movie({title: "Sharktopus", runningTime: 87}),
+    new Movie({title: "Mechashark", runningTime: 93})
 ]);
 
 var moviesList = new MoviesView({
@@ -176,3 +221,17 @@ $('#movies-list-content').html(moviesList.render().$el);
 // movies.at(3).set('runningTime', 244)
 
 
+//BARDZO POMOCNE PRZY OBSLUDZE FETCH
+//https://developer.mozilla.org/en-US/docs/Web/API/Body
+//ELEMENT BODY UDOSTEPNIA METODY DO PARASOWANIA RESPONSA np text uzyte ponizej
+function testFetch() {
+    fetch('/templates/movieTemplate.html').then(function (result) {
+        if (result && result.text) {
+            return result.text(); //promise
+        }
+    }).then(function (parased) {
+        console.log('ok ', parased);
+    }).catch(function (err) {
+        console.log('err ', err);
+    })
+}
