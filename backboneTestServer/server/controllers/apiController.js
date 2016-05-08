@@ -26,7 +26,9 @@ var apiController = function(Vehicle){
             return (page && !isNaN(page)) ? page : 1;
         })(Number(req.query.page))
 
-        return Vehicle.find().skip((page-1)*2).limit(2).exec(function(err, result){
+        //pagination temporary turned off
+        //return Vehicle.find().skip((page-1)*2).limit(2).exec(function(err, result){
+        return Vehicle.find().exec(function(err, result){
             if(err){
                 console.log('errr, ',err);
                 return res.status(500).json({error: err});

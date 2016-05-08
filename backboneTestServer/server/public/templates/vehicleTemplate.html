@@ -1,0 +1,7 @@
+<!--class="editable" id="vehicle-2"-->
+<div class="<%= isEdited ? 'edited' : ''%>">
+<span class="id-column"><%= id %></span>
+<span contenteditable="<%= isEdited ? 'true' : 'false'%>" class="name-column"><%= name %></span>
+<button class="edit-btn"><%= isEdited ? 'Zapisz' : 'Edytuj'%></button>
+<button class="delete-btn">Usuń</button>
+</div>

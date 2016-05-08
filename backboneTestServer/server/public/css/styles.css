@@ -8,3 +8,58 @@ body, p { font-size: 24px; }
 .even {
 	color: #00B7FF;
 }
+
+.controls {
+	position: fixed;
+	padding: 2px 10px;
+	bottom: 0;
+	left: 0;
+	width: 100%;
+	background-color: #F0F0F0;
+	border-top: 1px #888 solid;
+	box-shadow: #AAA 0 -2px 10px;
+}
+
+.controls button {
+	float: right;
+	margin-right: 30px;
+}
+
+.content-table ul {
+	list-style: none;
+}
+
+.content-table ul li {
+	padding: 5px 0;
+}
+
+li div:before, li div:after {
+	content: "";
+	display: table;
+}
+
+li div:after {
+	clear: both;
+}
+
+
+.content-table ul li span{
+	float: left;
+	margin-right: 20px;
+}
+
+.content-table ul li span:first-child{
+	width: 60px;
+}
+
+li .edited{
+	background-color: lightgoldenrodyellow;
+}
+
+.content-table button {
+	float: right;
+	margin: 0 5px;
+	line-height: 1.2em;
+	font-size: 1em;
+}
+
