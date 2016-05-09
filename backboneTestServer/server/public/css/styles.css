@@ -65,3 +65,12 @@ li .edited{
 	font-size: 1em;
 }
 
+.items {
+	float: left;
+	width: 30%;
+}
+
+.content-container {
+	float: left;
+	width: 66%;
+}
