@@ -1,49 +1,50 @@
 <!DOCTYPE html>
 <html class="no-js">
-    <head>
-        <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-        <title>FirstApp</title>
-        <meta name="description" content="">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>FirstApp</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 
-        <link rel="stylesheet" href="css/normalize.min.css">
-        <link rel="stylesheet" href="css/main.css">
-        <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/normalize.min.css">
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/styles.css">
 
-        <script src="js/lib/modernizr-2.6.2.min.js"></script>
-    </head>
-    <body>
-    <div class="content-table">
-        <!--<ul>-->
-            <!--<li id="vehicle-1">-->
-                <!--<span class="id-column" >1</span>-->
-                <!--<span class="name-column">Dacia</span>-->
-                <!--<button>Edytuj</button>-->
-                <!--<button>Usuń</button>-->
-            <!--</li>-->
-            <!--<li class="editable" id="vehicle-2">-->
-                <!--<span class="id-column" >1</span>-->
-                <!--<span contenteditable="true" class="name-column">Dacia</span>-->
-                <!--<button class="edit-btn">Edytuj</button>-->
-                <!--<button class="delete-btn">Usuń</button>-->
-            <!--</li>-->
-            <!--<li id="vehicle-1">-->
-                <!--<span class="id-column" >123</span>-->
-                <!--<span class="name-column">Dacia</span>-->
-                <!--<button>Edytuj</button>-->
-                <!--<button>Usuń</button>-->
-            <!--</li>-->
-        <!--</ul>-->
-    </div>
-    <div class="controls">
-        <label for="name">Nazwa: </label>
-        <input type="text" id="name">
-        <button id="add-vehicle-btn" class="add-vehicle-btn">Dodaj</button>
-    </div>
-        <script src="js/lib/jquery-min.js"></script>
-        <script src="js/lib/underscore-min.js"></script>
-        <script src="js/lib/backbone-min.js"></script>
-        <script src="js/vehiclesApi.js"></script>
-    </body>
+    <script src="js/lib/modernizr-2.6.2.min.js"></script>
+</head>
+<body>
+<div class="content-table">
+    <!--<ul>-->
+    <!--<li id="vehicle-1">-->
+    <!--<span class="id-column" >1</span>-->
+    <!--<span class="name-column">Dacia</span>-->
+    <!--<button>Edytuj</button>-->
+    <!--<button>Usuń</button>-->
+    <!--</li>-->
+    <!--<li class="editable" id="vehicle-2">-->
+    <!--<span class="id-column" >1</span>-->
+    <!--<span contenteditable="true" class="name-column">Dacia</span>-->
+    <!--<button class="edit-btn">Edytuj</button>-->
+    <!--<button class="delete-btn">Usuń</button>-->
+    <!--</li>-->
+    <!--<li id="vehicle-1">-->
+    <!--<span class="id-column" >123</span>-->
+    <!--<span class="name-column">Dacia</span>-->
+    <!--<button>Edytuj</button>-->
+    <!--<button>Usuń</button>-->
+    <!--</li>-->
+    <!--</ul>-->
+</div>
+<div class="controls">
+    <label for="name">Nazwa: </label>
+    <input type="text" id="name">
+    <button id="add-vehicle-btn" class="add-vehicle-btn">Dodaj</button>
+</div>
+<script src="js/lib/jquery-min.js"></script>
+<script src="js/lib/underscore-min.js"></script>
+<script src="js/lib/backbone-min.js"></script>
+<script src="js/lib/fetchPolyfil.js"></script>
+<script src="js/vehiclesApi.js"></script>
+</body>
 </html>

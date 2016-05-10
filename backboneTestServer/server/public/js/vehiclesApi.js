@@ -67,12 +67,21 @@ var VehicleView = Backbone.View.extend({
     },
     isEdited: false,
     initialize: function (data) {
-        if (data && data.removeCallback) {
-            this.removeCallback = data.removeCallback;
+
+        //CALLBACK
+        //if (data && data.removeCallback) {
+        //    this.removeCallback = data.removeCallback;
+        //}
+        if(data.eventPipe && data.eventPipe.trigger){
+            this.eventPipe = data.eventPipe;
         }
     },
     deleteElement: function () {
-        this.removeCallback(this.model);
+        //CALLBACK
+        //this.removeCallback(this.model);
+        if(this.eventPipe){
+            this.eventPipe.trigger('onRemove', this.model);
+        }
     },
     editElement: function () {
         //POOR MANS UPDATE W/O BINDING
@@ -137,12 +146,18 @@ var VehicleView = Backbone.View.extend({
     }
 });
 
+var eventPipe = _.extend({}, Backbone.Events);
+
 
 var VehiclesView = Backbone.View.extend({
     tagName: 'ul',
-    initialize: function () {
+    initialize: function (data) {
         if (this.model && this.model.length) {
             this.model.on('add', this.addElement, this);
+        }
+        if(data.eventPipe && data.eventPipe.on){
+            this.eventPipe = data.eventPipe;
+            this.eventPipe.on('onRemove', this.onRemove);
         }
     },
     onRemove: function (element) {
@@ -161,7 +176,8 @@ var VehiclesView = Backbone.View.extend({
     addElement: function (element) {
         var vehicle = new VehicleView({
             model: element,
-            removeCallback: this.onRemove
+            //removeCallback: this.onRemove
+            eventPipe: this.eventPipe
         });
         this.$el.append(vehicle.render().$el);
     },
@@ -194,7 +210,8 @@ var list = new Vehicles();
 list.fetch({
     success: function () {
         var view = new VehiclesView({
-            model: list
+            model: list,
+            eventPipe: eventPipe
         });
         console.log(view);
         $('.content-table').html(view.render().$el);
