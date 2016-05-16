@@ -4,3 +4,7 @@ body {
 }
 
 body, p { font-size: 24px; }
+
+li.complete {
+	text-decoration: line-through;
+}
