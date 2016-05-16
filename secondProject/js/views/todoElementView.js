@@ -8,7 +8,9 @@ var TodoElementView = Backbone.View.extend({
     },
 
    render: function(){
-       this.$el.html(this.model.get('description'));
+       //ESCAPE ZAMIAST GET SPRAWIA ZE HTML NIE BEDZIE WYKONYWAY
+       //UNIKA CROSS SIDE SCRIPTINGU
+       this.$el.html(this.model.escape('description'));
 
        return this;
    }
