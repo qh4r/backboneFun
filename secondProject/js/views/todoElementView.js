@@ -28,10 +28,9 @@ var TodoElementView = Backbone.View.extend({
 
        //ESCAPE ZAMIAST GET SPRAWIA ZE HTML NIE BEDZIE WYKONYWAY
        //UNIKA CROSS SIDE SCRIPTINGU
-       this.$el.html('<input type="checkbox" '+
-           (this.model.get("isComplete") ? 'checked' : '')+
-           '> '+ this.model.escape('description') +
-       ' <button>delete</button>');
+       var template = $('#todoElementTemplate').html();
+       var html = Mustache.render(template, this.model.toJSON());
+       this.$el.append(html);
 
        return this;
    }
