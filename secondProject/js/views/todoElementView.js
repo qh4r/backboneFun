@@ -1,5 +1,8 @@
 var TodoElementView = Backbone.View.extend({
     tagName: 'li',
+    id: function(){
+        return this.model.get('itemId');
+    },
     initialize: function(data){
         if(!data || !data.model){
             throw new Error('no model passed');
@@ -8,11 +11,15 @@ var TodoElementView = Backbone.View.extend({
         this.model.on('change', this.render, this);
     },
     events: {
-        'click input[type=checkbox]:first': 'onToggle'
+        'click input[type=checkbox]:first': 'onToggle',
+        'click button': 'onDelete'
     },
 
     onToggle: function(){
         this.model.toggleCompletion();
+    },
+    onDelete: function(){
+      this.model.destroy();
     },
 
    render: function(){
@@ -21,7 +28,10 @@ var TodoElementView = Backbone.View.extend({
 
        //ESCAPE ZAMIAST GET SPRAWIA ZE HTML NIE BEDZIE WYKONYWAY
        //UNIKA CROSS SIDE SCRIPTINGU
-       this.$el.html('<input type="checkbox" '+(this.model.get("isComplete") ? 'checked' : '')+ '> '+ this.model.escape('description'));
+       this.$el.html('<input type="checkbox" '+
+           (this.model.get("isComplete") ? 'checked' : '')+
+           '> '+ this.model.escape('description') +
+       ' <button>delete</button>');
 
        return this;
    }

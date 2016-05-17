@@ -6,6 +6,7 @@ var TodoListView = Backbone.View.extend({
           throw new Error('no list items passed');
       }
         this.model.on('add', this.onElementAdded, this);
+        this.model.on('remove', this.onRemove, this);
         this.eventBus = _.extend({}, Backbone.Events);
         //BARDZO BRZYDKIE
         this.addClicked = (function(){
@@ -31,14 +32,17 @@ var TodoListView = Backbone.View.extend({
           this.addClicked();
       }
     },
+    onRemove: function(elem){
+      this.$('#'+elem.get('itemId')).remove();
+    },
     events: {
         'click #add': 'addClicked',
         'keypress #descInput': 'onKeyPressed'
     },
     render: function(){
 
-        this.$el.append('<input type="text" autofocus id="descInput">')
-        this.$el.append('<button id="add">Add</button>')
+        this.$el.append('<input type="text" autofocus id="descInput">');
+        this.$el.append('<button id="add">Add</button>');
 
         this.model.forEach(function(element){
             var view = new TodoElementView({model: element});
